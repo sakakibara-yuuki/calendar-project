@@ -1,0 +1,53 @@
+name: CI-test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: setup Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: install npm dependencies
+        run: npm install
+
+      - name: run npm build
+        run: npm run build
+
+      - name: run ESLint
+        run: npm run lint
+
+  danger-check:
+    runs-on: ubuntu-latest
+    needs: build-and-lint
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install Danger JS
+        run: npm install danger --save-dev
+
+      - name: Run Danger JS
+        run: npx danger ci
