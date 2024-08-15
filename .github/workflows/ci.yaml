@@ -48,6 +48,8 @@ jobs:
 
       - name: Install Danger JS
         run: npm install danger --save-dev
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Danger JS
         run: npx danger ci
